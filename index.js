@@ -13,12 +13,9 @@ const getConstants= async function(options){
   return [QrFONT, chemin_qr, QRCode];}
 
 
-
 program
-    .version('1.0.0').description(
-'generate unique QR codes from a csv file'
-    )
-    /*csvPath is required by commander*/
+    .version('1.0.0').description('generate unique QR codes from a csv file')
+    /*csvPath is required for terminal*/
     .arguments('<csvPath>')
   .action(async (f, options) => {
 const ids=new Array()
@@ -42,9 +39,11 @@ const ids=new Array()
             // Ending if label unneed
             if(!options.label){
               return false
+
             }else {
               const image = await jimp.read(chemin_qr)
               const d=2
+
               // Adding label on image
               image.print(options.label ? await jimp.loadFont(jimp.FONT_SANS_16_BLACK) : null,
                 QR_CODE_SIZE/d - jimp.measureText(options.label ?
@@ -52,6 +51,7 @@ const ids=new Array()
                 QR_CODE_SIZE-jimp.measureTextHeight(options.label ? await jimp.loadFont(jimp.FONT_SANS_16_BLACK) : null, id_Qr) - 8, id_Qr)
               return image
                 .writeAsync(chemin_qr)
+
             }
           }catch(erreur){
             // don't stop others
@@ -66,10 +66,7 @@ const ids=new Array()
           const s = Math.round(ids.length-erreursQR.length)
         console.log(`✓QR codes generated, ${s} succeeded,${erreursQR.length} failed`);process.exit(0)
       }catch (err) {
-        console.error('QR Code generation failed', err);
-
-
-        process.exit(1)
+        console.error('QR Code generation failed', err);process.exit(1)
       }
     })
   // --dest is required by commander
